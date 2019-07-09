@@ -1,0 +1,497 @@
+//code begins:
+#include<stdio.h>
+#include<stdlib.h>
+#include<GL/glut.h>
+#include<conio.h>
+#include<string.h>
+#include<math.h>
+int maxy=600, count=0, maxx=500, n=3, m=3,r,q; //count=no of arrows fired
+int count1=0,count2=0,count3=0,count4=0,count5=0,count6=0,count7=0,count8=0,count9=0,count10=0; //weve put a counter for each star and set it as 0 initially boz no star is hit yet
+int x=25,y=50;//initital pt of arrow ie bottom of screen
+int f=2;//page managing
+char str[10];
+
+void id1(void);
+void id(void);
+void cover(void);
+void draw_target(void);
+void drawhit(int x,int y);
+void drawstar(int x,int y);
+void disp(void);
+void display(void);
+void disa(void);
+void bitmap_output(int x,int y,char *string,void *font);
+void gamelost(void);
+
+
+//to draw target after hit
+void drawhit(int x,int y)
+{
+glColor3f(1,1,1);
+glPointSize(5);
+glBegin(GL_POINTS);
+glVertex2d(x,y);
+glEnd();
+glBegin(GL_LINES);
+	glVertex2d(x+3,y);
+	glVertex2d(x+8,y);
+glEnd();
+glBegin(GL_LINES);
+	glVertex2d(x-3,y);
+	glVertex2d(x-8,y);
+glEnd();
+glBegin(GL_LINES);
+	glVertex2d(x,y+3);
+	glVertex2d(x,y+8);
+glEnd();
+glBegin(GL_LINES);
+	glVertex2d(x,y-3);
+	glVertex2d(x,y-8);
+glEnd();
+}
+//to draw the stars
+void drawstar(int x,int y)  //forms star ,param:center of star
+{
+	glColor3f(0.1,0.1,0.0);
+    glBegin(GL_POLYGON);
+    glColor3f(1.0,1.0,0.0);    
+	glVertex2i(x+5,y+5);
+    glColor3f(1.0,1.0,0.0);    
+    glVertex2i(x+15,y);
+	glColor3f(1.0,1.0,0.0);
+	glVertex2i(x+5,y-5);
+	glColor3f(1.0,1.0,0.0);
+	glVertex2i(x,y-20);
+    glColor3f(1.0,1.0,0.0);
+	glVertex2i(x-5,y-5);
+    glColor3f(1.0,1.0,0.0);
+	glVertex2i(x-15,y);
+    glColor3f(1.0,1.0,0.0);
+	glVertex2i(x-5,y+5);
+    glColor3f(1.0,1.0,0.0);
+	glVertex2i(x,y+20);
+	glEnd();
+}
+/*to display bitmap char*/
+void bitmap_output(int x,int y,char *string,void *font)
+{
+int len,i;
+glRasterPos2f(x,y);//to point somewhere
+len=(int)strlen(string);
+for(i=0;i<len;i++)
+{
+glutBitmapCharacter(font,string[i]);
+}
+return;
+}
+/*based on count display no of arrows and result of game*/
+void counting()
+{ 
+sprintf(str,"No of arrows:%d",count); //when not sure what content whould be..which keeps changing..
+bitmap_output(400,40,str,GLUT_BITMAP_HELVETICA_18);
+if(count1==1 && count2==1 && count3==1 && count4==1 && count5==1 && count6==1 && count7==1 && count8==1 && count9==1 && count10==1) //checking game cond,if every star is hit
+{
+bitmap_output(5,300,"CONGRATULATIONS YOU WON",GLUT_BITMAP_TIMES_ROMAN_24);
+glutIdleFunc(NULL);
+}
+else if(count>=15)   //all stars arent hit and count>=15 ie all arrows shooted
+{
+sprintf(str,"NO of arrows:%d,NO OF ARROWS OVER GAME LOST",count);
+bitmap_output(5,300,str,GLUT_BITMAP_TIMES_ROMAN_24);
+glutIdleFunc(gamelost);
+}
+}
+//TO CHECK WHETHER ARROW HITS TARGET
+void disa()
+{
+if((x+110==300) && (y>=435 && y<=465) && (!count1))    
+{
+count1=1;
+x=25;//reset arrow
+y=0;
+count++;
+glutIdleFunc(id); //move arrow up
+}
+else if((x+110 == 375)&&(y>=385&&y<=415) && (!count2))
+{
+count2=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==399)&&(y>=465 &&y<=495)&&(!count3))
+{
+count3=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==249)&&(y>=355&&y<=385)&&(!count4))
+
+{
+count4=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==351)&&(y>=315&&y<=345)&&(!count5))
+{
+count5=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==450)&&(y>=275&&y<=305)&&(!count6))
+{
+count6=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==330)&&(y>=230&&y<=260)&&(!count7))
+{
+count7=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==201)&&(y>=185&&y<=215)&&(!count8))
+{
+count8=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==339)&&(y>=135&&y<=165)&&(!count9))
+{
+count9=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+else if((x+110==300)&&(y>=85&&y<=115)&&(!count10))
+{
+count10=1;
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+}
+//to change when game is lost
+void gamelost()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glClearColor(0,0,0,0);
+	glColor3f(1,1,1);
+	bitmap_output(150,350,"STAR SHOOTER",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(150,310,"you ran out of arrows!",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(150,240,"HaHa,You Lost",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(150,220,"better luck next time",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(150,200,"Press t to try again or press q to quit game",GLUT_BITMAP_TIMES_ROMAN_24);
+	glFlush();
+	glutSwapBuffers();
+}
+/*to move arrow up*/
+void id()
+{
+	if(f!=2){
+y+=1;  //so arrows go up
+disa();
+if(y>maxy)  //exited the screen
+{
+y=0;
+count++; //an arrow lost
+}
+glutPostRedisplay();
+}}
+//1st page
+void cover()
+{
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glClearColor(0,0,0,0);
+	glColor3f(1,1,1);
+	bitmap_output(160,370,"SJB INSTITUTE OF TECHNOLOGY",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(195,350,"STAR SHOOTER",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,330,"developed by~",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,310,"Adarsh Bhasker(1jb16cs004) ",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,290,"and Adeeb Shakri(1jb16cs005)",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,260,"INSTRUCTIONS:",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,240,"Press 'r'  to move right and 'q' to quit",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,220,"A total of 15 arrows and 10 blocks are present",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,200,"If you succeed in shooting all the stars with",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,180,"the given arrows ,you win ,else you lose",GLUT_BITMAP_TIMES_ROMAN_24);
+	bitmap_output(160,160,"Press any key to start game",GLUT_BITMAP_TIMES_ROMAN_24);
+	glFlush();
+	glutSwapBuffers();
+
+}
+//to manage window chnages
+void display(void)
+{
+glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+glLoadIdentity();
+glColor3f(1,1,0);//yellow
+bitmap_output(150,450,"  STAR SHOOTER",GLUT_BITMAP_TIMES_ROMAN_24);
+counting(); //checks how many stars are hit
+//Drawing  of arrow
+glColor3f(0,1,1);
+glBegin(GL_LINES);
+glVertex2d(x,y); //refrence pt
+glVertex2d(x+60,y);  //one line in x axis for arrow
+glEnd();
+glLineWidth(2); //thickening of arrow
+glBegin(GL_LINES);
+glVertex2d(x,y+2);  
+glVertex2d(x+60,y+2);
+glEnd();
+glBegin(GL_LINES);
+glVertex2d(x,y-2);//thickening again
+glVertex2d(x+60,y-2);
+glEnd();
+glBegin(GL_TRIANGLES); //for head of arrow
+glVertex2d (x+60,y+3);
+glVertex2d(x+70,y);
+glVertex2d(x+60,y-3);
+glEnd();
+glBegin(GL_QUADS); //tail
+glVertex2d(x,y+3);
+glVertex2d(x,y-3);
+glVertex2d(x-10,y-5);
+glVertex2d(x-10,y+5);
+glEnd();
+draw_target();  //stars
+glFlush();
+glutSwapBuffers();
+
+
+}
+//manages btwn pages
+void disp()
+{
+if(f==2){
+	cover();
+}
+else
+{
+	display();
+}
+}
+//to initialize the window
+void init()
+{
+glClearColor(0,0,0,1);
+glColor3f(1,0,0);
+glMatrixMode(GL_PROJECTION);
+glLoadIdentity();
+gluOrtho2D(0,500,0,500);
+glMatrixMode(GL_MODELVIEW);
+}
+//to draw the target inside the loop ie stars
+void draw_target()
+{
+//int x=300,y=450;
+if(count1==0) //unhit so star wala
+{
+drawstar(300,450); //star unhit
+}
+else  //hit wala white wala
+{
+drawhit(300,450); //star hit
+}
+if(count2==0)
+{
+drawstar(375,400);
+}
+else
+{
+drawhit(375,400);
+}
+if(count3==0)
+{
+drawstar(400,475);
+}
+else
+{
+drawhit(400,475);
+}
+if(count4==0)
+{
+drawstar(250,375);
+}
+else
+{
+drawhit(250,375);
+}
+if(count5==0)
+{
+drawstar(350,330);
+}
+else
+{
+drawhit(350,330);
+}
+if(count6==0)
+{
+drawstar(450,290);
+}
+else
+{
+drawhit(450,290);
+}
+if(count7==0)
+{
+drawstar(330,245);
+}
+else
+{
+drawhit(330,245);
+}
+if(count8==0)
+{
+drawstar(200,200);
+}
+else
+{
+drawhit(200,200);
+}
+if(count9==0)
+{
+drawstar(400,150);
+}
+else
+{
+drawhit(400,150);
+}
+if(count10==0)
+{
+drawstar(300,100);
+}
+else
+{
+drawhit(300,100);
+}
+glFlush();
+}
+//to move the arrow left when ‘r’ pressed
+void id1() //horizontal motion of arrow and new arrow will not pop up until one is done
+{
+x+=m;
+disa();//to check if star is hit
+if(x+110>maxx)
+{
+x=25;
+y=0;
+count++;
+glutIdleFunc(id);
+}
+glutPostRedisplay();
+}
+//set key to perform desired operation
+void keys(unsigned char k,int r,int q)
+{
+	if(f==2)
+	{
+	f=0;
+	glutPostRedisplay();//recall dsiplay func again
+	}
+	glutPostRedisplay();
+if((k=='t'||k=='T')&&((count==15)||(count1==1 && count2==1 && count3==1 && count4==1 && count5==1 && count6==1 && count7==1 && count8==1 && count9==1 && count10==1))) //retry ~lost || won
+{   
+  count=0;
+  count1=0;
+  count2=0;count3=0;
+  count4=0;
+  count5=0;
+  count6=0;
+  count7=0;
+  count8=0;
+  count9=0;
+  count10=0;
+  f=2;
+  init();  //initialize again
+  glutDisplayFunc(disp);
+
+}
+if((k=='r'||k=='R')&&count<15&&f!=2)  //r to shoot
+glutIdleFunc(id1);
+if(k=='q'||k=='Q')  //quit
+exit(0);
+if(k=='t'&&count>=15)
+{
+	f==2;
+	count=0;
+	count1=0;count2=0;count3=0;count4=0;count5=0;count6=0;count7=0;count8=0;count9=0;count10=0;
+	glutPostRedisplay();
+	glutIdleFunc(id);
+}
+glutSwapBuffers();
+glutPostRedisplay();
+}
+//sub menu to display instructions
+void demo_menu(int i)
+{
+switch(i)
+{
+case 5:
+case 6:
+case 7:
+case 8:break;
+}
+}
+//sub menu to display designer names
+/*void demo(int i)
+{
+switch(i)
+{
+case 9:
+case 10:
+case 11:break;
+}
+}*/
+
+//main menu 
+void game(int id)
+{
+switch(id);
+{
+}
+}
+int main(int argc,char **argv)
+{
+int sub_menu;
+glutInit(&argc,argv);
+glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB|GLUT_DEPTH);
+glutInitWindowSize(900,900);
+glutCreateWindow("STAR SHOOTER");
+sub_menu=glutCreateMenu(demo_menu);
+glutAddMenuEntry(" r  to move right",5);
+glutAddMenuEntry("A total of 15 arrows and 10 blocks are present",6);
+glutAddMenuEntry("You loose the game if the arrow count exceeds the blocks count",7);
+glutAddMenuEntry("or else you win",8);
+glutCreateMenu(game);
+glutAddSubMenu("INSTRUCTIONS",sub_menu);
+glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+glutFullScreen();
+glutDisplayFunc(disp);
+glutIdleFunc(id); //when no input is givem from the user
+glutKeyboardFunc(keys);
+init();  //to inititalize
+glEnable(GL_DEPTH_TEST);
+glutMainLoop();
+return 0;
+}
+
+//*****END OF CODE 3****
